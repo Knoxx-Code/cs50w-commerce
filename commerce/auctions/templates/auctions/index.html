@@ -4,12 +4,14 @@
     <h2>Active Listings</h2>
         <div class="auction_listings">
             {% for listing in listings %}
+                {% if listing.status == 'active' %}
                 <div class="auction_listing">
                     <img src="{{listing.image}}" alt="{{listing.name}}">
                     <h3>{{listing.title}}</h3>
                     <p>{{listing.starting_bid}}</p>
                     <p>Created at: {{listing.created_at}}</p>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     

@@ -21,7 +21,16 @@ class AuctionListing(models.Model):
     image = models.URLField()
     starting_bid = models.DecimalField(decimal_places=2,max_digits=10)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True)
-    isActive = models.BooleanField()
+    status = models.CharField(
+    max_length=10,
+    choices=[
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+        ('disabled', 'Disabled'),
+    ],
+    default='active'
+    )
+
     seller = models.ForeignKey(User,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
