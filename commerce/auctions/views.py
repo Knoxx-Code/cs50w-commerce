@@ -5,11 +5,14 @@ from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import AuctionListing, User
 from . import forms
 
 def index(request):
-    return render(request, "auctions/index.html")
+    auction_listings = AuctionListing.objects.all().order_by('title')
+    return render(request, "auctions/index.html",{
+        'listings': auction_listings
+    })
 
 
 def login_view(request):

@@ -11,6 +11,9 @@ class User(AbstractUser):
 class Category(models.Model):
     categoryName = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.categoryName
+
 # Class to store the auction listing details
 class AuctionListing(models.Model):
     title = models.CharField(max_length=128)
@@ -20,6 +23,10 @@ class AuctionListing(models.Model):
     category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True)
     isActive = models.BooleanField()
     seller = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.title} - Posted by: {self.seller}'
 
 #Class to store the bid details
 class Bid(models.Model):
