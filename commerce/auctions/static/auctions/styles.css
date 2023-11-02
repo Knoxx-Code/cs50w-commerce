@@ -60,11 +60,12 @@ body {
     color: #f9faf8;
     
 }
-
+/* Styling for active listings page*/
 .auction-listings {
     margin: 20px 35px;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 40px;
 }
 
 .auction-listing {
@@ -103,6 +104,7 @@ body {
     
 }
 
+/* Styling for Login/Register Forms */
 .auth-form-title {
     display: flex;
     justify-content: center;
@@ -150,4 +152,60 @@ body {
 
 .login-reg-here {
     text-decoration: underline;
+}
+
+
+/* Styling for the create listings page*/
+.create-listing-title {
+    text-align: center;
+    padding: auto;
+    
+}
+
+.create-listing {
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.listing-form {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    grid-gap: 10px; 
+}
+
+
+.listing-form input[type="text"],
+.listing-form select,
+.listing-form textarea,
+.listing-form input[type="url"],
+.listing-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+
+
+
+.submit-listing {
+    grid-column: 1/-1;
+    place-self: center;
+    width: 200px;
+    padding: 10px;
+    border: none;
+    margin-top: 5px;
+    background-color: #1f2937;
+    color: #fff;
+    border-radius: 20px; 
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-listing:hover {
+    background-color: #45505e;
 }

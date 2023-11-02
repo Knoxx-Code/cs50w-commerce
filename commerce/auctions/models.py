@@ -18,7 +18,7 @@ class Category(models.Model):
 class AuctionListing(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
-    image = models.URLField()
+    image = models.URLField(blank=True)
     starting_bid = models.DecimalField(decimal_places=2,max_digits=10)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,blank=True)
     status = models.CharField(
