@@ -8,34 +8,47 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
+        <div class="header">
+            <div class="app-name">
+                <h1>Auctions</h1>
+                <img src="{% static "auctions/auction.png" %}" id="logo" alt="">
+            </div>
+            <ul class="nav">
+                <div class="left-links">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_listing'%}">Create listing</a>
+                        </li>
+                    {% endif %}
+                </div>
+                
+                <div class="right-links">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+            </ul>
+                    <div class="current-user-container">
+                        {% if user.is_authenticated %}
+                        <span id="current-user">  Signed in as <strong>{{ user.username }}</strong>. </span>
+                        {% else %}
+                        <span id="current-user">Not signed in.</span> 
+                        {% endif %}
+                    </div>
+                </div>     
         </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create_listing'%}">Create listing</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
+            
         <hr>
         {% block body %}
         {% endblock %}
