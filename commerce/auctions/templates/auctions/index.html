@@ -1,15 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-        <div class="auction_listings">
+    <h2 class="active-listings-title">Active Listings</h2>
+        <div class="auction-listings">
             {% for listing in listings %}
                 {% if listing.status == 'active' %}
-                <div class="auction_listing">
-                    <img src="{{listing.image}}" alt="{{listing.name}}">
-                    <h3>{{listing.title}}</h3>
-                    <p>{{listing.starting_bid}}</p>
-                    <p>Created at: {{listing.created_at}}</p>
+                <div class="auction-listing">
+                    <div class="listing-card">
+                        <div class="listing-img-container">
+                            <img class="listing-img" src="{{listing.image}}" alt="{{listing.name}}">
+                        </div>
+                        
+                        <h3>{{listing.title}}</h3>
+                        <p>Starting bid: ${{listing.starting_bid}}</p>
+                        <p>Created at: {{listing.created_at}}</p>
+                    </div>
+                    
                 </div>
                 {% endif %}
             {% endfor %}
