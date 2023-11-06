@@ -1,0 +1,49 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% block body %}
+    <div class="listing-info-container">
+        <div class="listing-info-img-container">
+            {% if listing.image == "" %}
+                <img class="listing-info-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
+            {%else%}
+                <img class="listing-info-img" src="{{listing.image}}" alt="{{listing.name}}">
+            {% endif %}
+        </div>
+        <h3>{{listing.title}}</h3>
+        <h4>{{listing.description}}</h4>
+        <p>Starting bid: {{listing.starting_bid}}</p>
+        <p>Posted by: {{listing.seller}}</p>
+        <p>{{bids}} Bid(s)</p>
+        
+        <div class="top-bids">
+            {% if top_bids %}
+                <h3>Top Bids:</h3>
+                <ul>
+                    {% for bid in top_bids %}
+                        <li>{{bid.bidder.username}}  {{bid.amount}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+            {% if user == listing.seller %}
+
+            {%else%}
+                <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
+                    {% csrf_token %}
+            
+                    {% comment %} {% if bid_msg is not None %}
+                        <div class="alert">{{ bid_msg }}</div>
+                    {% endif %} {% endcomment %}
+                    {% comment %} <input type="number" min="{{listing.starting_bid}}" step="any" name="bid-amount" required> {% endcomment %}
+                    {{bid_form}}
+                    <input class="place-bid" type="submit" value="Place Bid">
+                </form>
+            {% endif %}
+        {% else %}
+            <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to place a bid</a>    
+        {% endif %}
+    </div>
+    
+
+{% endblock %}

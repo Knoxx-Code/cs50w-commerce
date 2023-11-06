@@ -44,6 +44,9 @@ class Bid(models.Model):
     listing = models.ForeignKey(AuctionListing,on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.bidder} -  {self.amount} - {self.listing}'
+
 #Class to store the comment details
 class Comment(models.Model):
     commenter  = models.ForeignKey(User,on_delete=models.CASCADE)

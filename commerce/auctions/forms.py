@@ -12,4 +12,8 @@ class CreateListing(forms.ModelForm):
         }
 
 
-     
+class PlaceBid(forms.ModelForm):
+
+    class Meta:
+        model = models.Bid
+        fields = ['amount']  

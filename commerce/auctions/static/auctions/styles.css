@@ -14,6 +14,7 @@ body {
     justify-content: space-between;
     margin: 0;
     padding: 5px 40px;
+    align-items: center;
     
 }
 
@@ -22,7 +23,7 @@ body {
     color: #f9faf8;
     display: flex;
     align-items: center;
-    margin: 0 10px;
+    margin: 0 ;
 }
 
 #logo {
@@ -44,11 +45,13 @@ body {
 
 .left-links {
     display: flex;
+    
 }
 
 .right-links {
     display: flex;
-    margin-left: 700px;
+    margin-left: 500px;
+    flex-grow: 1;
 }
 
 .current-user-container {
@@ -155,11 +158,11 @@ body {
 }
 
 
+
 /* Styling for the create listings page*/
 .create-listing-title {
     text-align: center;
-    padding: auto;
-    
+    padding: 2px;
 }
 
 .create-listing {
@@ -208,4 +211,68 @@ body {
 
 .submit-listing:hover {
     background-color: #45505e;
+}
+
+
+
+
+.listing-info-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.listing-info-img {
+    max-width: 100%;
+    height: 400px;
+}
+
+h3 {
+    font-size: 24px;
+    margin: 10px 0;
+    color: #333;
+}
+
+h4 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #555;
+}
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #777;
+}
+
+.alert {
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #034807;
+    border-radius: 5px;
+}
+
+#bid-amount {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.place-bid {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.place-bid:hover {
+    background-color: #0056b3;
 }

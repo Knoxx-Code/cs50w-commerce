@@ -12,7 +12,7 @@
             <div>{{ message }}</div>
         {% endif %}
     
-        <form action="{% url 'login' %}" method="post">
+        <form action="{% url 'auctions:login' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <input autofocus class="form-control" type="text" name="username" placeholder="Username">
@@ -20,10 +20,13 @@
             <div class="form-group">
                 <input class="form-control" type="password" name="password" placeholder="Password">
             </div>
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{request.GET.next}}">
+            {% endif %}
             <input class="btn btn-primary" type="submit" value="Login">
         </form>
     
-        Don't have an account? <a class="login-reg-here"  href="{% url 'register' %}">Register here.</a>
+        Don't have an account? <a class="login-reg-here"  href="{% url 'auctions:register' %}">Register here.</a>
     </div>
     
 
