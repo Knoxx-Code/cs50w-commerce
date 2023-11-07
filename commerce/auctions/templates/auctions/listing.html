@@ -27,7 +27,7 @@
         </div>
         {% if user.is_authenticated %}
             {% if user == listing.seller %}
-
+                <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
             {%else%}
                 <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
                     {% csrf_token %}

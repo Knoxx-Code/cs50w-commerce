@@ -1,4 +1,5 @@
 
+from tkinter.tix import Tree
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -31,8 +32,9 @@ class AuctionListing(models.Model):
     default='active'
     )
 
-    seller = models.ForeignKey(User,on_delete=models.CASCADE)
+    seller = models.ForeignKey(User,on_delete=models.CASCADE,related_name="listing_seller")
     created_at = models.DateTimeField(auto_now_add=True)
+    winner = models.ForeignKey(User,null=True,blank=True,on_delete=models.SET_NULL,related_name="listing_winner")
 
     def __str__(self):
         return f'{self.title} - Posted by: {self.seller}'

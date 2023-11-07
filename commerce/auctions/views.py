@@ -1,9 +1,11 @@
+from ast import Pass
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from itsdangerous import NoneAlgorithm
 
 from .models import AuctionListing, User, Bid
 from . import forms
@@ -129,3 +131,19 @@ def listing_view(request,listing_id):
         
     })
 
+@login_required(login_url='/auctions/login/')
+def close_listing(request,listing_id):
+    listing = AuctionListing.objects.get(id=listing_id)
+    existing_bids = Bid.objects.filter(listing=listing)
+    if listing.seller == request.user:
+        if existing_bids.exists():
+            listing.status = 'completed'
+            winning_bid = existing_bids.order_by('-amount').first()
+            listing.winner = winning_bid.bidder
+        else:
+            listing.status = 'disabled'
+            listing.winner = None
+    listing.save()
+
+
+    return redirect('auctions:index')

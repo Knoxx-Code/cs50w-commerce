@@ -276,3 +276,19 @@ p {
 .place-bid:hover {
     background-color: #0056b3;
 }
+
+.close-listing {
+    background-color: #c10f2c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.close-listing:hover {
+    background-color: #f31e42;
+    text-decoration: none;
+    color: #fff;
+}
