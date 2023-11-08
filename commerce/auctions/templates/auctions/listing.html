@@ -32,17 +32,26 @@
                 <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
                     {% csrf_token %}
             
-                    {% comment %} {% if bid_msg is not None %}
+                    {% if bid_msg is not None %}
                         <div class="alert">{{ bid_msg }}</div>
-                    {% endif %} {% endcomment %}
+                    {% endif %}
                     {% comment %} <input type="number" min="{{listing.starting_bid}}" step="any" name="bid-amount" required> {% endcomment %}
                     {{bid_form}}
                     <input class="place-bid" type="submit" value="Place Bid">
                 </form>
+                <div class="watchlist-content">
+                    {% if listing in watchlist_listings %}
+                        <a class="watchlist-remove" href="{%url 'auctions:watchlist_remove' listing.id%}"><img id="minus" src="{% static "auctions/minus.png" %}" >Remove from watchlist</a>
+                    {%else%}
+                    <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
+                    {% endif %}
+                    
+                </div>
             {% endif %}
         {% else %}
-            <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to place a bid</a>    
+            <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
         {% endif %}
+
     </div>
     
 

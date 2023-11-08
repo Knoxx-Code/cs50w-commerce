@@ -5,6 +5,7 @@ from django import forms
 
 class CreateListing(forms.ModelForm):
     class Meta:
+        error_css_class = 'error'
         model = models.AuctionListing
         fields = ['title','description','image','starting_bid','category']
         labels = {
@@ -15,5 +16,6 @@ class CreateListing(forms.ModelForm):
 class PlaceBid(forms.ModelForm):
 
     class Meta:
+        error_css_class = 'error'
         model = models.Bid
         fields = ['amount']  

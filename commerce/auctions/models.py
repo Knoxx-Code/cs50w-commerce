@@ -1,5 +1,5 @@
 
-from tkinter.tix import Tree
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -55,3 +55,11 @@ class Comment(models.Model):
     listing = models.ForeignKey(AuctionListing,on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+# Class to store the watchlist
+class WatchList(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    listing = models.ManyToManyField(AuctionListing)
+
+    def __str__(self):
+       return f"{self.user}'s WatchList"

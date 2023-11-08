@@ -1,14 +1,15 @@
-from ast import Pass
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from itsdangerous import NoneAlgorithm
+from django.contrib import messages
 
-from .models import AuctionListing, User, Bid
+from .models import AuctionListing, User, Bid, WatchList
 from . import forms
+
 
 def index(request):
     auction_listings = AuctionListing.objects.all().order_by('title')
@@ -84,14 +85,21 @@ def create_listing(request):
             return redirect('auctions:index')
     else:
         listings_form = forms.CreateListing()
-    
+
     return render(request,'auctions/create_listing.html',{
         'form': listings_form
     })
 
 
 def listing_view(request,listing_id):
-    listing = AuctionListing.objects.get(id=listing_id)
+    
+    listing = get_object_or_404(AuctionListing, id=listing_id)
+    try:
+        watchlist = WatchList.objects.get(user=request.user)
+        watchlist_listings = watchlist.listing.all()
+    except WatchList.DoesNotExist:
+        watchlist_listings = []
+    
     no_of_bids = Bid.objects.filter(listing=listing).count()
     top_bids = Bid.objects.filter(listing=listing).order_by('-amount')[:3]
     bid_msg = None
@@ -112,28 +120,30 @@ def listing_view(request,listing_id):
                         new_bid.bidder = request.user
                         new_bid.listing = listing
                         new_bid.save()
+                        bid_msg = 'Bid placed successfully'
                 else:
                     new_bid.bidder = request.user
                     new_bid.listing = listing
                     new_bid.save()
-            # bid_msg = 'Bid placed successfully'
+                    bid_msg = 'Bid placed successfully'
     else:
         bid_form = forms.PlaceBid()
-            
+          
         
 
     return render(request,'auctions/listing.html',{
         "listing": listing,
         "bids": no_of_bids,
         "bid_form": bid_form,
-        "top_bids": top_bids
-        # "bid_msg" : bid_msg
+        "top_bids": top_bids,
+        "bid_msg" : bid_msg,
+        "watchlist_listings":watchlist_listings
         
     })
 
 @login_required(login_url='/auctions/login/')
 def close_listing(request,listing_id):
-    listing = AuctionListing.objects.get(id=listing_id)
+    listing = get_object_or_404(AuctionListing, id=listing_id)
     existing_bids = Bid.objects.filter(listing=listing)
     if listing.seller == request.user:
         if existing_bids.exists():
@@ -147,3 +157,33 @@ def close_listing(request,listing_id):
 
 
     return redirect('auctions:index')
+
+
+def add_to_watchlist(request,listing_id):
+    listing = get_object_or_404(AuctionListing, id=listing_id)
+    in_watchlist = WatchList.objects.filter(user=request.user,listing=listing)
+
+    if in_watchlist.exists():
+        messages.error(request,'This listing is already in your watchlist')
+        return HttpResponseRedirect(reverse('auctions:index'))
+    
+    watchlist, created = WatchList.objects.get_or_create(user=request.user)
+    watchlist.listing.add(listing)
+    messages.success(request,'Listing successfully added to watchlist')
+
+    return redirect('auctions:watchlist')
+
+def remove_from_watchlist(request,listing_id):
+    listing = get_object_or_404(AuctionListing, id=listing_id)
+    watchlist = get_object_or_404(WatchList,user=request.user)
+
+    watchlist.listing.remove(listing)
+    messages.success(request,'Listing removed successfully')
+
+    return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
+    
+def load_watchlist(request):
+    watchlist = WatchList.objects.get(user=request.user)
+    watchlist_listings = watchlist.listing.all()
+    print(watchlist_listings)
+    return render(request,"auctions/watchlist.html",{"watchlist_listings":watchlist_listings})

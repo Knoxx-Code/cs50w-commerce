@@ -215,7 +215,7 @@ body {
 
 
 
-
+/*Styling for the listing info page*/
 .listing-info-container {
     max-width: 800px;
     margin: 0 auto;
@@ -251,10 +251,25 @@ p {
 
 .alert {
     padding: 10px;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #034807;
+    text-align: center;
+    background-color: #0f9d58 ;
+    border: 1px solid #0f9d58 ;
+    color: #fff;
     border-radius: 5px;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none; 
+    }
 }
 
 #bid-amount {
@@ -291,4 +306,65 @@ p {
     background-color: #f31e42;
     text-decoration: none;
     color: #fff;
+}
+
+.errorlist
+{
+    color: red;
+    border: 2px red solid;
+    list-style-type: none;
+    padding: 5px;
+}
+
+.watchlist-add {
+    background-color: #fff;
+    color: #0f9d58 ;
+    border: 2px #0f9d58 solid;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+#add {
+    width: 20px;
+    height: auto;
+    margin: 2px;
+}
+
+.watchlist-add:hover {
+    background-color: #9ae7c3 ;
+    text-decoration: none;
+    color: #0f9d58;
+}
+
+#minus {
+    width: 20px;
+    height: auto;
+    margin: 2px;
+}
+
+.watchlist-remove {
+    background-color: #c10f2c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.watchlist-remove:hover {
+    background-color: #f31e42;
+    text-decoration: none;
+    color: #fff;
+}
+
+.success{
+    padding: 10px;
+    text-align: center;
+    background-color: #0f9d58 ;
+    border: 1px solid #0f9d58 ;
+    color: #fff;
+    border-radius: 5px;
+    animation: fadeOut 2s forwards;
 }
