@@ -1,4 +1,5 @@
 
+from email import message
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,8 +8,10 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import AuctionListing, User, Bid, WatchList
+from .models import AuctionListing, Category, User, Bid, WatchList
 from . import forms
+
+import time
 
 
 def index(request):
@@ -102,32 +105,47 @@ def listing_view(request,listing_id):
     
     no_of_bids = Bid.objects.filter(listing=listing).count()
     top_bids = Bid.objects.filter(listing=listing).order_by('-amount')[:3]
-    bid_msg = None
-    if request.method == 'POST':
-        bid_form = forms.PlaceBid(request.POST)
-        if bid_form.is_valid():
-            new_bid = bid_form.save(commit=False)
-            if new_bid.amount < listing.starting_bid:
-                bid_form.add_error('amount','Bid amount must be greater than or equal to starting bid')
-            else:
-                #Get the bids made on the listing
-                existing_bids = Bid.objects.filter(listing=listing)
-                if existing_bids.exists():
-                    highest_bid = existing_bids.order_by('-amount').first()
-                    if new_bid.amount <= highest_bid.amount:
-                         bid_form.add_error('amount','Bid amount must be greater than current highest bid')
+    winner = None
+
+    if listing.status == 'completed':
+        if listing not in watchlist_listings:
+            return redirect('auctions:index')
+        existing_bids = Bid.objects.filter(listing=listing)
+        highest_bid = existing_bids.order_by('-amount').first()
+        winner = highest_bid.bidder
+        bid_form = None
+    else:
+        if request.method == 'POST':
+            bid_form = forms.PlaceBid(request.POST)
+            if bid_form.is_valid():
+                new_bid = bid_form.save(commit=False)
+                if new_bid.amount < listing.starting_bid:
+                    messages.error(request,'Bid amount must be greater than or equal to starting bid')
+                else:
+                    #Get the bids made on the listing
+                    existing_bids = Bid.objects.filter(listing=listing)
+                    if existing_bids.exists():
+                        highest_bid = existing_bids.order_by('-amount').first()
+                        if new_bid.amount <= highest_bid.amount:
+                            messages.error(request,'Bid amount must be greater than current highest bid')
+                        else:
+                            new_bid.bidder = request.user
+                            new_bid.listing = listing
+                            new_bid.save()
+                            messages.success(request,'Bid placed successfully')
+                            if listing not in watchlist_listings:
+                                watchlist.listing.add(listing)
+                                return redirect(request.META['HTTP_REFERER'])
                     else:
                         new_bid.bidder = request.user
                         new_bid.listing = listing
                         new_bid.save()
-                        bid_msg = 'Bid placed successfully'
-                else:
-                    new_bid.bidder = request.user
-                    new_bid.listing = listing
-                    new_bid.save()
-                    bid_msg = 'Bid placed successfully'
-    else:
-        bid_form = forms.PlaceBid()
+                        messages.success(request,'Bid placed successfully')
+                        if listing not in watchlist_listings:
+                                watchlist.listing.add(listing)
+                                return redirect(request.META['HTTP_REFERER'])
+        else:
+            bid_form = forms.PlaceBid()
           
         
 
@@ -136,8 +154,8 @@ def listing_view(request,listing_id):
         "bids": no_of_bids,
         "bid_form": bid_form,
         "top_bids": top_bids,
-        "bid_msg" : bid_msg,
-        "watchlist_listings":watchlist_listings
+        "watchlist_listings":watchlist_listings,
+        "winner": winner
         
     })
 
@@ -158,7 +176,7 @@ def close_listing(request,listing_id):
 
     return redirect('auctions:index')
 
-
+@login_required(login_url='/auctions/login/')
 def add_to_watchlist(request,listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
     in_watchlist = WatchList.objects.filter(user=request.user,listing=listing)
@@ -169,21 +187,43 @@ def add_to_watchlist(request,listing_id):
     
     watchlist, created = WatchList.objects.get_or_create(user=request.user)
     watchlist.listing.add(listing)
+    
     messages.success(request,'Listing successfully added to watchlist')
 
-    return redirect('auctions:watchlist')
+    return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
+    
 
+@login_required(login_url='/auctions/login/')
 def remove_from_watchlist(request,listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
     watchlist = get_object_or_404(WatchList,user=request.user)
 
     watchlist.listing.remove(listing)
-    messages.success(request,'Listing removed successfully')
-
-    return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
+    messages.success(request,'Listing removed successfully from watchlist')
     
+    return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
+
+@login_required(login_url='/auctions/login/')    
 def load_watchlist(request):
-    watchlist = WatchList.objects.get(user=request.user)
+    watchlist = get_object_or_404(WatchList,user=request.user)
     watchlist_listings = watchlist.listing.all()
     print(watchlist_listings)
     return render(request,"auctions/watchlist.html",{"watchlist_listings":watchlist_listings})
+
+def display_categories(request):
+    categories = Category.objects.all()
+    return render(request,'auctions/categories.html',{
+        "categories": categories
+    })
+
+def listings_in_category(request,category_name):
+    category = get_object_or_404(Category,categoryName=category_name)
+
+    listings = AuctionListing.objects.filter(category=category,status='active')
+
+    return render(request,'auctions/listings_category.html',{
+        "listings":listings,
+        "category":category
+    })
+
+    

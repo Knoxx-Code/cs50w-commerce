@@ -16,5 +16,7 @@ urlpatterns = [
     path("add_to_watchlist/<int:listing_id>",views.add_to_watchlist,name="watchlist_add"),
     path("remove_from_watchlist/<int:listing_id>",views.remove_from_watchlist,name="watchlist_remove"),
     path("watchlist/",views.load_watchlist,name="watchlist"),
+    path("categories/",views.display_categories,name="display_categories"),
+    path("categories/<str:category_name>",views.listings_in_category,name="listings_in_category")
     
 ]

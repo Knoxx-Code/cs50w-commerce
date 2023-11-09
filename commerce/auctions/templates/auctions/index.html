@@ -6,27 +6,27 @@
         <div class="auction-listings">
             {% for listing in listings %}
                 {% if listing.status == 'active' %}
-                <div class="auction-listing">
-                    <a href="{% url 'auctions:listing_view'  listing.id%}">
-                        <div class="listing-card">
-                            <div class="listing-img-container">
-                                {% if listing.image == "" %}
-                                    <img class="listing-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
-                                {%else%}
-                                    <img class="listing-img" src="{{listing.image}}" alt="{{listing.name}}">
-                                {% endif %}
+                    <div class="auction-listing">
+                        <a href="{% url 'auctions:listing_view'  listing.id%}">
+                            <div class="listing-card">
+                                <div class="listing-img-container">
+                                    {% if listing.image == "" %}
+                                        <img class="listing-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
+                                    {%else%}
+                                        <img class="listing-img" src="{{listing.image}}" alt="{{listing.name}}">
+                                    {% endif %}
+                                    
+                                </div>
                                 
+                                <h3>{{listing.title}}</h3>
+                                <p>Starting bid: ${{listing.starting_bid}}</p>
+                                <p>Created at: {{listing.created_at}}</p>
                             </div>
-                            
-                            <h3>{{listing.title}}</h3>
-                            <p>Starting bid: ${{listing.starting_bid}}</p>
-                            <p>Created at: {{listing.created_at}}</p>
-                        </div>
-                    </a>
-                    
-                    
-                </div>
+                        </a>
+                    </div>
                 {% endif %}
+            {%empty%}
+                <div>No Active Listings Found</div>
             {% endfor %}
         </div>
     

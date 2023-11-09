@@ -217,13 +217,24 @@ body {
 
 /*Styling for the listing info page*/
 .listing-info-container {
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 30px;
     background-color: #fff;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.main-listing-info {
+    flex: 1;
+}
+
+.other-listing-info {
+    width: 50%;
 }
 
 .listing-info-img {
@@ -249,6 +260,7 @@ p {
     color: #777;
 }
 
+
 .alert {
     padding: 10px;
     text-align: center;
@@ -270,6 +282,14 @@ p {
         opacity: 0;
         display: none; 
     }
+}
+
+.top-bids-title {
+    text-align: center;
+}
+
+.top-bids-list {
+    list-style-type: none;
 }
 
 #bid-amount {
@@ -359,12 +379,44 @@ p {
     color: #fff;
 }
 
-.success{
+
+
+.message-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error
+{
+    background-color: #c10f2c;
+    color: #fff;
+    list-style-type: none;
+    border-radius: 20px;
+    padding: 10px;
+    max-width: fit-content;
+    align-content: center;
+    animation: fadeOut 2s forwards;
+}
+
+.success
+{
+    background-color: #0f9d58 ;
+    color: #fff;
+    list-style-type: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    max-width: fit-content;
+    align-content: center;
+    animation: fadeOut 2s forwards;
+}
+
+
+.winning-msg{
     padding: 10px;
     text-align: center;
     background-color: #0f9d58 ;
     border: 1px solid #0f9d58 ;
     color: #fff;
     border-radius: 5px;
-    animation: fadeOut 2s forwards;
 }

@@ -19,7 +19,7 @@
                         <a class="nav-link" href="{% url 'auctions:index' %}">Active Listings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'auctions:index' %}">Categories</a>
+                        <a class="nav-link" href="{% url 'auctions:display_categories' %}">Categories</a>
                     </li>
                     
                     {% if user.is_authenticated %}

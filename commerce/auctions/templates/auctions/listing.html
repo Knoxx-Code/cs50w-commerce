@@ -1,57 +1,77 @@
 {% extends "auctions/layout.html" %}
 {% load static %}
 {% block body %}
-    <div class="listing-info-container">
-        <div class="listing-info-img-container">
-            {% if listing.image == "" %}
-                <img class="listing-info-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
-            {%else%}
-                <img class="listing-info-img" src="{{listing.image}}" alt="{{listing.name}}">
-            {% endif %}
-        </div>
-        <h3>{{listing.title}}</h3>
-        <h4>{{listing.description}}</h4>
-        <p>Starting bid: {{listing.starting_bid}}</p>
-        <p>Posted by: {{listing.seller}}</p>
-        <p>{{bids}} Bid(s)</p>
-        
-        <div class="top-bids">
-            {% if top_bids %}
-                <h3>Top Bids:</h3>
-                <ul>
-                    {% for bid in top_bids %}
-                        <li>{{bid.bidder.username}}  {{bid.amount}}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-        {% if user.is_authenticated %}
-            {% if user == listing.seller %}
-                <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
-            {%else%}
-                <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
-                    {% csrf_token %}
-            
-                    {% if bid_msg is not None %}
-                        <div class="alert">{{ bid_msg }}</div>
-                    {% endif %}
-                    {% comment %} <input type="number" min="{{listing.starting_bid}}" step="any" name="bid-amount" required> {% endcomment %}
-                    {{bid_form}}
-                    <input class="place-bid" type="submit" value="Place Bid">
-                </form>
-                <div class="watchlist-content">
-                    {% if listing in watchlist_listings %}
-                        <a class="watchlist-remove" href="{%url 'auctions:watchlist_remove' listing.id%}"><img id="minus" src="{% static "auctions/minus.png" %}" >Remove from watchlist</a>
-                    {%else%}
-                    <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
-                    {% endif %}
-                    
-                </div>
-            {% endif %}
-        {% else %}
-            <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
+    <div class="message-container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+                {% endfor %}
+            </ul>
         {% endif %}
-
+    </div>
+    
+    
+    <div class="listing-info-container">
+        <div class="main-listing">
+            <div class="listing-info-img-container">
+                {% if listing.image == "" %}
+                    <img class="listing-info-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
+                {%else%}
+                    <img class="listing-info-img" src="{{listing.image}}" alt="{{listing.name}}">
+                {% endif %}
+            </div>
+            <h3>{{listing.title}}</h3>
+            <h4>{{listing.description}}</h4>
+            <p>Starting bid: {{listing.starting_bid}}</p>
+            <p>Posted by: {{listing.seller}}</p>
+            <p>{{bids}} Bid(s)</p>
+        </div>
+        <div class="other-listing-info">
+            <div class="top-bids">
+                {% if top_bids %}
+                    <h3 class="top-bids-title">Top Bids:</h3>
+                    <ul class="top-bids-list">
+                        {% for bid in top_bids %}
+                            <li>{{bid.bidder.username}} - {{bid.amount}}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            {% if user.is_authenticated %}
+                {% if user == listing.seller %}
+                    <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
+                {%else%}
+                    {%if bid_form is not None%}
+                        <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
+                            {% csrf_token %}
+                    
+                            
+                            {% comment %} <input type="number" min="{{listing.starting_bid}}" step="any" name="bid-amount" required> {% endcomment %}
+                            {{bid_form}}
+                            <input class="place-bid" type="submit" value="Place Bid">
+                        </form>
+                    
+                    {%endif%}
+                    {% if winner is not None %}
+                        {%if winner == user%}
+                            <div class="winning-msg">Congratulations! You won the auction</div>
+                        {%else%}
+                            <div class="winning-msg">{{winner}} won the auction.</div>
+                        {%endif%}
+                    {% endif %}
+                    <div class="watchlist-content">
+                        {% if listing in watchlist_listings %}
+                            <a class="watchlist-remove" href="{%url 'auctions:watchlist_remove' listing.id%}"><img id="minus" src="{% static "auctions/minus.png" %}" >Remove from watchlist</a>
+                        {%else%}
+                        <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
+                        {% endif %}
+                    </div>   
+                {% endif %}
+            {% else %}
+                <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
+            {% endif %}
+        </div>            
     </div>
     
 

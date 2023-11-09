@@ -1,11 +1,11 @@
-
 {% extends "auctions/layout.html" %}
+
 {% load static %}
 {% block body %}
 
-    <h2 class="active-listings-title">Watchlist</h2>
+    <h2 class="active-listings-title">{{category.categoryName}}</h2>
         <div class="auction-listings">
-            {% for listing in watchlist_listings %}
+            {% for listing in listings %}
                 <div class="auction-listing">
                     <a href="{% url 'auctions:listing_view'  listing.id%}">
                         <div class="listing-card">
@@ -24,8 +24,11 @@
                         </div>
                     </a> 
                 </div>
-                
+            {%empty%}
+                <div>No listings in this Category</div>    
             {% endfor %}
         </div>
     
 {% endblock %}
+
+
