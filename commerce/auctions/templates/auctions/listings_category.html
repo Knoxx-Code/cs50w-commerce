@@ -9,7 +9,6 @@
                 <div class="auction-listing">
                     <a href="{% url 'auctions:listing_view'  listing.id%}">
                         <div class="listing-card">
-                            <p>{{listing.status}}</p>
                             <div class="listing-img-container">
                                 {% if listing.image == "" %}
                                     <img class="listing-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">

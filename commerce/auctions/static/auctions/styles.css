@@ -219,9 +219,10 @@ body {
 .listing-info-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 30px;
     max-width: 1000px;
-    margin: 0 30px;
+    margin: 20px auto;
     background-color: #fff;
     padding: 20px;
     border: 1px solid #ddd;
@@ -235,6 +236,11 @@ body {
 
 .other-listing-info {
     width: 50%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
 }
 
 .listing-info-img {
@@ -283,6 +289,13 @@ p {
         display: none; 
     }
 }
+.listing-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+   
+}
 
 .top-bids-title {
     text-align: center;
@@ -290,6 +303,20 @@ p {
 
 .top-bids-list {
     list-style-type: none;
+}
+
+.bid-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.bid-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 #bid-amount {
@@ -300,11 +327,13 @@ p {
 }
 
 .place-bid {
-    background-color: #007bff;
+    background-color: #0f9d58;
     color: #fff;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 20px;
+    width: 200px;
+    margin: 10px 0;
     cursor: pointer;
 }
 
@@ -317,9 +346,11 @@ p {
     color: #fff;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
+    width: 200px;
     text-decoration: none;
+    text-align: center;
 }
 
 .close-listing:hover {
@@ -336,14 +367,20 @@ p {
     padding: 5px;
 }
 
+.watchlist-content {
+    margin: 10px 0;
+}
+
 .watchlist-add {
     background-color: #fff;
     color: #0f9d58 ;
     border: 2px #0f9d58 solid;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     text-decoration: none;
+    width: 200px;
+    
 }
 #add {
     width: 20px;
@@ -368,9 +405,10 @@ p {
     color: #fff;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     text-decoration: none;
+    
 }
 
 .watchlist-remove:hover {
@@ -419,4 +457,44 @@ p {
     border: 1px solid #0f9d58 ;
     color: #fff;
     border-radius: 5px;
+    margin: 0 5px;
+}
+
+/*Styling for categories page*/
+.category-title {
+    margin: 5px 0;
+    text-align: center;
+}
+
+.category-container {
+    max-width: 900px;
+    margin: 10px auto;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.category-card {
+    background-color: #f9f9f9; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-card a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.category-card:hover {
+    background-color: #e0e0e0;
 }

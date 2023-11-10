@@ -97,10 +97,14 @@ def create_listing(request):
 def listing_view(request,listing_id):
     
     listing = get_object_or_404(AuctionListing, id=listing_id)
-    try:
-        watchlist = WatchList.objects.get(user=request.user)
-        watchlist_listings = watchlist.listing.all()
-    except WatchList.DoesNotExist:
+
+    if request.user.is_authenticated:
+        try:
+            watchlist = WatchList.objects.get(user=request.user)
+            watchlist_listings = watchlist.listing.all()
+        except WatchList.DoesNotExist:
+            watchlist_listings = []
+    else:
         watchlist_listings = []
     
     no_of_bids = Bid.objects.filter(listing=listing).count()

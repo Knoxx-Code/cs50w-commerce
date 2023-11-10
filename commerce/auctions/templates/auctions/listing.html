@@ -28,22 +28,22 @@
             <p>{{bids}} Bid(s)</p>
         </div>
         <div class="other-listing-info">
-            <div class="top-bids">
+            <div class="listing-actions">
                 {% if top_bids %}
-                    <h3 class="top-bids-title">Top Bids:</h3>
+                    <h3 class="top-bids-title">Top Bids</h3>
                     <ul class="top-bids-list">
                         {% for bid in top_bids %}
                             <li>{{bid.bidder.username}} - {{bid.amount}}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
-            </div>
-            {% if user.is_authenticated %}
+            <div class="bid-form-container">
+                {% if user.is_authenticated %}
                 {% if user == listing.seller %}
                     <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
                 {%else%}
                     {%if bid_form is not None%}
-                        <form action="{%url 'auctions:listing_view' listing.id%}" method="post">
+                        <form class="bid-form" action="{%url 'auctions:listing_view' listing.id%}" method="post">
                             {% csrf_token %}
                     
                             
@@ -66,7 +66,10 @@
                         {%else%}
                         <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
                         {% endif %}
-                    </div>   
+                    </div> 
+            </div>
+            
+            </div>     
                 {% endif %}
             {% else %}
                 <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    

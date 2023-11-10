@@ -18,4 +18,5 @@ class PlaceBid(forms.ModelForm):
     class Meta:
         error_css_class = 'error'
         model = models.Bid
-        fields = ['amount']  
+        fields = ['amount'] 
+        labels ={ 'amount': 'Enter Bid amount'}

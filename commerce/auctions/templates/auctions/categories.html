@@ -4,9 +4,9 @@
     <h1 class="category-title">Categories</h1>
 
     <div class="category-container">
-        <ul>
+        <ul class="category-grid">
             {% for category in categories %}
-                <li>
+                <li class="category-card">
                     <a href="{%url 'auctions:listings_in_category' category.categoryName%}">
                         {{category.categoryName}}
                     </a>
