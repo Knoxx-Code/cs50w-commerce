@@ -9,10 +9,12 @@
     </head>
     <body>
         <div class="header">
-            <div class="app-name">
-                <h1>Auctions</h1>
-                <img src="{% static "auctions/auction.png" %}" id="logo" alt="">
-            </div>
+            <a class="logo-home" href="{% url 'auctions:index' %}">
+                <div class="app-name">
+                    <h1>Auctions</h1>
+                    <img src="{% static "auctions/auction.png" %}" id="logo" alt="">
+                </div>
+            </a>
             <ul class="nav">
                 <div class="left-links">
                     <li class="nav-item">

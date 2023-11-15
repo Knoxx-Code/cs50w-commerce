@@ -14,6 +14,7 @@ from . import forms
 import time
 
 
+# Loads the index view which contains tne active listings
 def index(request):
     auction_listings = AuctionListing.objects.all().order_by('title')
     return render(request, "auctions/index.html",{
@@ -21,8 +22,8 @@ def index(request):
     })
 
 
+# Handles login
 def login_view(request):
-    
     if request.method == "POST":
         # Attempt to sign user in
         username = request.POST["username"]
@@ -34,6 +35,7 @@ def login_view(request):
             next_url = request.GET.get('next')
             
             login(request, user)
+            # If a user logs in while viewing a listing this redirects the user to the right listing
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             return HttpResponseRedirect(reverse("auctions:index"))
@@ -45,11 +47,12 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
+# Handles logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("auctions:index"))
 
-
+# Handles registration
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -76,6 +79,8 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
+# Handles the creation of a listing
 @login_required(login_url='/auctions/login/')
 def create_listing(request):
 
@@ -98,14 +103,15 @@ def listing_view(request,listing_id):
     
     listing = get_object_or_404(AuctionListing, id=listing_id)
 
+    watchlist_listings = []
+    
     if request.user.is_authenticated:
         try:
             watchlist = WatchList.objects.get(user=request.user)
             watchlist_listings = watchlist.listing.all()
         except WatchList.DoesNotExist:
             watchlist_listings = []
-    else:
-        watchlist_listings = []
+   
     
     no_of_bids = Bid.objects.filter(listing=listing).count()
     top_bids = Bid.objects.filter(listing=listing).order_by('-amount')[:3]

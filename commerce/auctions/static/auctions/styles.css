@@ -32,6 +32,16 @@ body {
     padding: 5px;
 }
 
+.logo-home {
+    text-decoration: none;
+}
+
+.logo-home:hover {
+    text-decoration: none;
+    color: #ffffff;
+    text-shadow: 0 0 10px #f9f9f9, 0 0 20px #f9f9f9, 0 0 30px #f9f9f9;
+}
+
 .nav{
     display: flex;
     align-items: center;
@@ -43,6 +53,12 @@ body {
     color: #f9faf8;
 }
 
+.nav-link:hover {
+    color: #f9faf8;
+    text-shadow: 0 0 10px #f9f9f9, 0 0 20px #f9f9f9, 0 0 30px #f9f9f9;
+}
+
+
 .left-links {
     display: flex;
     
@@ -50,17 +66,19 @@ body {
 
 .right-links {
     display: flex;
-    margin-left: 500px;
+    margin-left: 400px;
     flex-grow: 1;
 }
 
 .current-user-container {
     display: flex;
     align-items: center;
+    margin: 0;
 }
 
 #current-user {
     color: #f9faf8;
+    overflow: hidden;
     
 }
 /* Styling for active listings page*/
@@ -87,6 +105,20 @@ body {
     display: flex;
     flex-direction: column;
     text-align: center;
+   
+}
+
+.listing-card:hover {
+    background-color: #e0e0e0;
+}
+
+.to-listing {
+    text-decoration: none;
+}
+
+.to-listing:hover {
+    text-decoration: none;
+    
 }
 
 .listing-img-container {
@@ -371,6 +403,8 @@ p {
     margin: 10px 0;
 }
 
+
+
 .watchlist-add {
     background-color: #fff;
     color: #0f9d58 ;
@@ -498,3 +532,35 @@ p {
 .category-card:hover {
     background-color: #e0e0e0;
 }
+
+.listing-status {
+    height: 30px;
+    padding: 5px;
+    width: 130px;
+    margin: 0 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Additional watchlist page styling*/
+.listing-status p {
+    color: #fff;
+    font-size: smaller;
+
+}
+
+.status-active {
+    background-color: #0f9d58;
+    color: #fff;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+.status-completed {
+    background-color: #f31e42;
+    color: #fff;
+    border-radius: 15px;
+    font-weight: bold;
+}
+

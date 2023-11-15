@@ -7,9 +7,11 @@
         <div class="auction-listings">
             {% for listing in watchlist_listings %}
                 <div class="auction-listing">
-                    <a href="{% url 'auctions:listing_view'  listing.id%}">
+                    <a class="to-listing" href="{% url 'auctions:listing_view'  listing.id%}">
                         <div class="listing-card">
-                            <p>{{listing.status}}</p>
+                            <div class="listing-status {% if listing.status == 'active' %}status-active{% elif listing.status == 'completed' %}status-completed{% endif %}">
+                                <p>{{listing.status}}</p>
+                            </div>
                             <div class="listing-img-container">
                                 {% if listing.image == "" %}
                                     <img class="listing-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
@@ -24,7 +26,8 @@
                         </div>
                     </a> 
                 </div>
-                
+            {%empty%}
+                <div>No items in watchlist</div>    
             {% endfor %}
         </div>
     
