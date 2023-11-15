@@ -7,7 +7,7 @@
         <div class="auction-listings">
             {% for listing in listings %}
                 <div class="auction-listing">
-                    <a href="{% url 'auctions:listing_view'  listing.id%}">
+                    <a class="to-listing" href="{% url 'auctions:listing_view'  listing.id%}">
                         <div class="listing-card">
                             <div class="listing-img-container">
                                 {% if listing.image == "" %}

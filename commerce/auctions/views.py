@@ -1,5 +1,5 @@
 
-from email import message
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -11,7 +11,6 @@ from django.contrib import messages
 from .models import AuctionListing, Category, User, Bid, WatchList
 from . import forms
 
-import time
 
 
 # Loads the index view which contains tne active listings
