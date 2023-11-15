@@ -99,12 +99,14 @@ def create_listing(request):
     })
 
 
+# Handles all actions when viewing a particular listing
 def listing_view(request,listing_id):
     
     listing = get_object_or_404(AuctionListing, id=listing_id)
 
     watchlist_listings = []
-    
+
+    # Check if a user is logged in and get all listings in a users watchlist
     if request.user.is_authenticated:
         try:
             watchlist = WatchList.objects.get(user=request.user)
@@ -117,6 +119,7 @@ def listing_view(request,listing_id):
     top_bids = Bid.objects.filter(listing=listing).order_by('-amount')[:3]
     winner = None
 
+    # Check if a listing is closed and get the winner if bids were placed
     if listing.status == 'completed':
         if listing not in watchlist_listings:
             return redirect('auctions:index')
@@ -126,16 +129,19 @@ def listing_view(request,listing_id):
         bid_form = None
     else:
         if request.method == 'POST':
+            # Handle the bidding process
             bid_form = forms.PlaceBid(request.POST)
             if bid_form.is_valid():
                 new_bid = bid_form.save(commit=False)
+                # Ensure that bid amount is greater than starting bid
                 if new_bid.amount < listing.starting_bid:
                     messages.error(request,'Bid amount must be greater than or equal to starting bid')
                 else:
-                    #Get the bids made on the listing
+                    # Get the bids made on the listing
                     existing_bids = Bid.objects.filter(listing=listing)
                     if existing_bids.exists():
                         highest_bid = existing_bids.order_by('-amount').first()
+                        # Ensure bid is greater than highest bid
                         if new_bid.amount <= highest_bid.amount:
                             messages.error(request,'Bid amount must be greater than current highest bid')
                         else:
@@ -143,6 +149,7 @@ def listing_view(request,listing_id):
                             new_bid.listing = listing
                             new_bid.save()
                             messages.success(request,'Bid placed successfully')
+                            # If a user bids on a listing, it is automatically added to watchlist
                             if listing not in watchlist_listings:
                                 watchlist.listing.add(listing)
                                 return redirect(request.META['HTTP_REFERER'])
@@ -151,6 +158,7 @@ def listing_view(request,listing_id):
                         new_bid.listing = listing
                         new_bid.save()
                         messages.success(request,'Bid placed successfully')
+                        # If a user bids on a listing, it is automatically added to watchlist
                         if listing not in watchlist_listings:
                                 watchlist.listing.add(listing)
                                 return redirect(request.META['HTTP_REFERER'])
@@ -169,28 +177,33 @@ def listing_view(request,listing_id):
         
     })
 
+# Handles the closing of a listing
 @login_required(login_url='/auctions/login/')
 def close_listing(request,listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
     existing_bids = Bid.objects.filter(listing=listing)
+    #Checks if the current user is indeed the seller
     if listing.seller == request.user:
+        # Check if there are existing bids on the listing
         if existing_bids.exists():
             listing.status = 'completed'
             winning_bid = existing_bids.order_by('-amount').first()
             listing.winner = winning_bid.bidder
+        # If there are no existing bids disable the listing
         else:
             listing.status = 'disabled'
             listing.winner = None
     listing.save()
 
-
     return redirect('auctions:index')
 
+# Handles the adding of a listing to a user's watchlist
 @login_required(login_url='/auctions/login/')
 def add_to_watchlist(request,listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
     in_watchlist = WatchList.objects.filter(user=request.user,listing=listing)
 
+    # Check if listing is in already in watchlist
     if in_watchlist.exists():
         messages.error(request,'This listing is already in your watchlist')
         return HttpResponseRedirect(reverse('auctions:index'))
@@ -202,7 +215,7 @@ def add_to_watchlist(request,listing_id):
 
     return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
     
-
+# Handles removal of a listing from the watchlist
 @login_required(login_url='/auctions/login/')
 def remove_from_watchlist(request,listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
@@ -213,6 +226,7 @@ def remove_from_watchlist(request,listing_id):
     
     return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
 
+# Renders the watchlist page
 @login_required(login_url='/auctions/login/')    
 def load_watchlist(request):
     watchlist = get_object_or_404(WatchList,user=request.user)
@@ -220,12 +234,14 @@ def load_watchlist(request):
     print(watchlist_listings)
     return render(request,"auctions/watchlist.html",{"watchlist_listings":watchlist_listings})
 
+# Render the categories page
 def display_categories(request):
     categories = Category.objects.all()
     return render(request,'auctions/categories.html',{
         "categories": categories
     })
 
+# Show the listings in a category
 def listings_in_category(request,category_name):
     category = get_object_or_404(Category,categoryName=category_name)
 
