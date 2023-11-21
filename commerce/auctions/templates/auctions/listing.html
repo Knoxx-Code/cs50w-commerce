@@ -39,7 +39,7 @@
                     </ul>
                 {% endif %}
             <div class="bid-form-container">
-                {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
                 {% if user == listing.seller %}
                     <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
                 {%else%}
@@ -69,13 +69,52 @@
                         {% endif %}
                     </div> 
             </div>
-            
-            </div>     
+            </div>   
                 {% endif %}
             {% else %}
                 <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
-            {% endif %}
+            {% endif %}  
         </div>            
+    </div>
+
+    <div class="comments-section">
+        {%if user.is_authenticated%}
+            
+            <div class="comments-form">
+                {% if user != listing.seller %}
+                    {% if comments_form is not None %}
+                        <form class="make-comment" action="" method="post">
+                            {% csrf_token %}
+                            {{comments_form}}
+                            <button type="submit" class="btn-post-comment"> 
+                                <img src="{% static "auctions/post-comment.svg" %}" alt="Post comment">
+                            </button>
+                        </form>
+                    {% endif %}
+                {%endif%}
+            </div>
+        {%endif%}
+        <div class="sort-and-count">
+            <form class="sorting-form" method="get">
+                <label for="sort">Sort by</label>
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Newest</option>
+                </select>
+            </form>
+            <p class="comments-right" id="comments-count">{{comments_count}} comment(s)</p>
+        </div>
+        <div class="comments">
+            {% for comment in comments %}
+                <div class="comment">
+                    <p><img src="{% static "auctions/user.svg" %}" alt="Profile picture">{{comment.commenter}}</p>
+                    <p>{{comment.content}}</p>
+                    <p>Created on: {{comment.timestamp}}</p>
+                </div>
+            {%empty%}
+                <div>No comments on this listing</div>
+            {% endfor %}     
+        </div>    
     </div>
     
 

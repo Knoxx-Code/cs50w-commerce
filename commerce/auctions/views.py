@@ -1,14 +1,15 @@
 
 
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render,redirect
-from django.urls import reverse
+from django.urls import is_valid_path, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import AuctionListing, Category, User, Bid, WatchList
+from .models import AuctionListing, Category, User, Bid, WatchList,Comment
 from . import forms
 
 
@@ -118,6 +119,8 @@ def listing_view(request,listing_id):
     top_bids = Bid.objects.filter(listing=listing).order_by('-amount')[:3]
     winner = None
 
+    
+
     # Check if a listing is closed and get the winner if bids were placed
     if listing.status == 'completed':
         if listing not in watchlist_listings:
@@ -164,7 +167,32 @@ def listing_view(request,listing_id):
         else:
             bid_form = forms.PlaceBid()
           
-        
+    # Comments creation
+    if request.method == 'POST':
+        comments_form = forms.MakeComment(request.POST)  
+
+        if comments_form.is_valid():
+            new_comment = comments_form.save(commit=False)
+            new_comment.commenter = request.user
+            new_comment.listing = listing
+            new_comment.save()
+            messages.success(request,'Your comment has been saved')
+    else:
+        comments_form = forms.MakeComment()  
+
+    # Comments display
+    comments = Comment.objects.filter(listing=listing)
+
+    # Comments sorting
+    sort_comment = request.GET.get('sort','oldest')
+
+    if sort_comment == 'newest':
+        comments = Comment.objects.filter(listing=listing).order_by('-timestamp')
+    else:
+        comments = Comment.objects.filter(listing=listing).order_by('timestamp')
+
+    # Comments count
+    comments_count = Comment.objects.filter(listing=listing).count
 
     return render(request,'auctions/listing.html',{
         "listing": listing,
@@ -172,7 +200,10 @@ def listing_view(request,listing_id):
         "bid_form": bid_form,
         "top_bids": top_bids,
         "watchlist_listings":watchlist_listings,
-        "winner": winner
+        "winner": winner,
+        "comments_form": comments_form,
+        "comments": comments,
+        "comments_count": comments_count
         
     })
 
