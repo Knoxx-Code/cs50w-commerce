@@ -82,6 +82,8 @@ body {
     
 }
 /* Styling for active listings page*/
+
+
 .auction-listings {
     margin: 20px 35px;
     display: grid;
@@ -248,12 +250,17 @@ body {
 
 
 /*Styling for the listing info page*/
+.content-container {
+    display: flex;
+    flex-direction: column;
+    
+}
 .listing-info-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
-    max-width: 1000px;
+    gap: 10px;
+    width: 80%;
     margin: 2px auto;
     background-color: #fff;
     padding: 20px;
@@ -262,12 +269,26 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.main-listing-info {
-    flex: 1;
+.main-listing {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.listing-info-details {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+}
+
+.listing-info-img-container{
+    margin: 5px;
 }
 
 .other-listing-info {
-    width: 50%;
+    width: 40%;
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -326,7 +347,7 @@ p {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-   
+    padding: 10px;
 }
 
 .top-bids-title {
@@ -494,6 +515,125 @@ p {
     margin: 0 5px;
 }
 
+
+/* Styling for comments section */
+.comments-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+.comments-form {
+    margin-bottom: 20px;
+}
+
+.make-comment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+.comments-form-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.comment-textarea{
+    border-radius: 8px;
+    padding-right: 40px;
+}
+
+.comment-textarea::placeholder {
+    padding: 10px;
+}
+
+
+.btn-post-comment {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+}
+
+.sort-and-count {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 150px;
+    
+}
+
+.sorting-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+select {
+    margin-left: 5px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.comment {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin: 3px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.comment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-pic {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+}
+
+.commenter {
+    font-size: larger;
+    font-weight: bold;
+    color: #000;
+}
+
+.comment-content {
+    font-size: 20px;
+    margin-left: 4%;
+}
+
+.comment-time {
+    text-align: right;
+    font-size: 15px;
+}
+
+.sort-label {
+    padding: 2px;
+    margin: 3px 0;
+}
+
 /*Styling for categories page*/
 .category-title {
     margin: 5px 0;
@@ -533,6 +673,8 @@ p {
     background-color: #e0e0e0;
 }
 
+
+
 .listing-status {
     height: 30px;
     padding: 5px;
@@ -563,4 +705,3 @@ p {
     border-radius: 15px;
     font-weight: bold;
 }
-

@@ -144,39 +144,50 @@ def listing_view(request,listing_id):
                     if existing_bids.exists():
                         highest_bid = existing_bids.order_by('-amount').first()
                         # Ensure bid is greater than highest bid
-                        if new_bid.amount <= highest_bid.amount:
+                        if new_bid.amount < highest_bid.amount:
                             messages.error(request,'Bid amount must be greater than current highest bid')
                         else:
                             new_bid.bidder = request.user
                             new_bid.listing = listing
                             new_bid.save()
                             messages.success(request,'Bid placed successfully')
+                            
                             # If a user bids on a listing, it is automatically added to watchlist
                             if listing not in watchlist_listings:
                                 watchlist.listing.add(listing)
-                                return redirect(request.META['HTTP_REFERER'])
+                                return redirect('auctions:listing_view', listing_id=listing.id)
+                            
+                            return redirect('auctions:listing_view', listing_id=listing.id)
                     else:
                         new_bid.bidder = request.user
                         new_bid.listing = listing
                         new_bid.save()
                         messages.success(request,'Bid placed successfully')
+                        
                         # If a user bids on a listing, it is automatically added to watchlist
                         if listing not in watchlist_listings:
                                 watchlist.listing.add(listing)
-                                return redirect(request.META['HTTP_REFERER'])
+                                return redirect('auctions:listing_view', listing_id=listing.id)
+                        return redirect('auctions:listing_view', listing_id=listing.id)
         else:
             bid_form = forms.PlaceBid()
           
     # Comments creation
     if request.method == 'POST':
+            
         comments_form = forms.MakeComment(request.POST)  
 
         if comments_form.is_valid():
-            new_comment = comments_form.save(commit=False)
-            new_comment.commenter = request.user
-            new_comment.listing = listing
-            new_comment.save()
-            messages.success(request,'Your comment has been saved')
+            if request.user.is_authenticated:
+                new_comment = comments_form.save(commit=False)
+                new_comment.commenter = request.user
+                new_comment.listing = listing
+                new_comment.save()
+                messages.success(request,'Your comment has been saved')
+                return redirect('auctions:listing_view', listing_id=listing.id)
+            else:
+                messages.error(request,'You must be logged in to place a comment')
+                return redirect('auctions:listing_view', listing_id=listing.id)
     else:
         comments_form = forms.MakeComment()  
 
@@ -192,7 +203,7 @@ def listing_view(request,listing_id):
         comments = Comment.objects.filter(listing=listing).order_by('timestamp')
 
     # Comments count
-    comments_count = Comment.objects.filter(listing=listing).count
+    comments_count = Comment.objects.filter(listing=listing).count()
 
     return render(request,'auctions/listing.html',{
         "listing": listing,

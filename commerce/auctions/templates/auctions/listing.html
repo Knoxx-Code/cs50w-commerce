@@ -11,111 +11,116 @@
         {% endif %}
     </div>
     
-    
-    <div class="listing-info-container">
-        <div class="main-listing">
-            <div class="listing-info-img-container">
-                {% if listing.image == "" %}
-                    <img class="listing-info-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
-                {%else%}
-                    <img class="listing-info-img" src="{{listing.image}}" alt="{{listing.name}}">
-                {% endif %}
-            </div>
-            <h3>{{listing.title}}</h3>
-            <h4>{{listing.description}}</h4>
-            <h5>{{listing.category}}</h5>
-            <p>Starting bid: {{listing.starting_bid}}</p>
-            <p>Posted by: {{listing.seller}}</p>
-            <p>{{bids}} Bid(s)</p>
-        </div>
-        <div class="other-listing-info">
-            <div class="listing-actions">
-                {% if top_bids %}
-                    <h3 class="top-bids-title">Top Bids</h3>
-                    <ul class="top-bids-list">
-                        {% for bid in top_bids %}
-                            <li>{{bid.bidder.username}} - {{bid.amount}}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            <div class="bid-form-container">
-            {% if user.is_authenticated %}
-                {% if user == listing.seller %}
-                    <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
-                {%else%}
-                    {%if bid_form is not None%}
-                        <form class="bid-form" action="{%url 'auctions:listing_view' listing.id%}" method="post">
-                            {% csrf_token %}
-                    
-                            
-                            {% comment %} <input type="number" min="{{listing.starting_bid}}" step="any" name="bid-amount" required> {% endcomment %}
-                            {{bid_form}}
-                            <input class="place-bid" type="submit" value="Place Bid">
-                        </form>
-                    
-                    {%endif%}
-                    {% if winner is not None %}
-                        {%if winner == user%}
-                            <div class="winning-msg">Congratulations! You won the auction</div>
-                        {%else%}
-                            <div class="winning-msg">{{winner}} won the auction.</div>
-                        {%endif%}
+    <div class="content-container">
+        <div class="listing-info-container">
+            <div class="main-listing">
+                <div class="listing-info-img-container">
+                    {% if listing.image == "" %}
+                        <img class="listing-info-img" src="{% static "auctions/blank-image.png" %}" alt="Blank Image">
+                    {%else%}
+                        <img class="listing-info-img" src="{{listing.image}}" alt="{{listing.name}}">
                     {% endif %}
-                    <div class="watchlist-content">
-                        {% if listing in watchlist_listings %}
-                            <a class="watchlist-remove" href="{%url 'auctions:watchlist_remove' listing.id%}"><img id="minus" src="{% static "auctions/minus.png" %}" >Remove from watchlist</a>
-                        {%else%}
-                        <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
-                        {% endif %}
-                    </div> 
-            </div>
-            </div>   
-                {% endif %}
-            {% else %}
-                <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
-            {% endif %}  
-        </div>            
-    </div>
-
-    <div class="comments-section">
-        {%if user.is_authenticated%}
-            
-            <div class="comments-form">
-                {% if user != listing.seller %}
-                    {% if comments_form is not None %}
-                        <form class="make-comment" action="" method="post">
-                            {% csrf_token %}
-                            {{comments_form}}
-                            <button type="submit" class="btn-post-comment"> 
-                                <img src="{% static "auctions/post-comment.svg" %}" alt="Post comment">
-                            </button>
-                        </form>
-                    {% endif %}
-                {%endif%}
-            </div>
-        {%endif%}
-        <div class="sort-and-count">
-            <form class="sorting-form" method="get">
-                <label for="sort">Sort by</label>
-                <select name="sort" id="sort" onchange="this.form.submit()">
-                    <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Newest</option>
-                </select>
-            </form>
-            <p class="comments-right" id="comments-count">{{comments_count}} comment(s)</p>
-        </div>
-        <div class="comments">
-            {% for comment in comments %}
-                <div class="comment">
-                    <p><img src="{% static "auctions/user.svg" %}" alt="Profile picture">{{comment.commenter}}</p>
-                    <p>{{comment.content}}</p>
-                    <p>Created on: {{comment.timestamp}}</p>
                 </div>
-            {%empty%}
-                <div>No comments on this listing</div>
-            {% endfor %}     
-        </div>    
+                <div class="listing-info-details">
+                    <h3>{{listing.title}}</h3>
+                    <h4>{{listing.description}}</h4>
+                    <h5>{{listing.category}}</h5>
+                    <p>Starting bid: {{listing.starting_bid}}</p>
+                    <p>Posted by: {{listing.seller}}</p>
+                    <p>{{bids}} Bid(s)</p>
+                </div>
+                
+            </div>
+            <div class="other-listing-info">
+                <div class="listing-actions">
+                    {% if top_bids %}
+                        <h3 class="top-bids-title">Top Bids</h3>
+                        <ul class="top-bids-list">
+                            {% for bid in top_bids %}
+                                <li>{{bid.bidder.username}} - {{bid.amount}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div class="bid-form-container">
+                        {% if user.is_authenticated %}
+                            {% if user == listing.seller %}
+                                <a class="close-listing" href="{%url 'auctions:close_listing' listing.id%}">Close Listing</a>
+                            {%else%}
+                                {%if bid_form is not None%}
+                                    <form class="bid-form" action="{%url 'auctions:listing_view' listing.id%}" method="post">
+                                        {% csrf_token %}
+                                        {{bid_form}}
+                                        <input class="place-bid" type="submit" value="Place Bid">
+                                    </form>
+                                
+                                {%endif%}
+                                {% if winner is not None %}
+                                    {%if winner == user%}
+                                        <div class="winning-msg">Congratulations! You won the auction</div>
+                                    {%else%}
+                                        <div class="winning-msg">{{winner}} won the auction.</div>
+                                    {%endif%}
+                                {% endif %}
+                                <div class="watchlist-content">
+                                    {% if listing in watchlist_listings %}
+                                        <a class="watchlist-remove" href="{%url 'auctions:watchlist_remove' listing.id%}"><img id="minus" src="{% static "auctions/minus.png" %}" >Remove from watchlist</a>
+                                    {%else%}
+                                    <a class="watchlist-add" href="{%url 'auctions:watchlist_add' listing.id%}"><img id="add" src="{% static "auctions/add.png" %}" > Add to Watchlist</a>
+                                    {% endif %}
+                                </div> 
+                            {% endif %}
+                        {%else%}
+                            <a href="{%url 'auctions:login' %}?next={%url 'auctions:listing_view' listing.id %}">Login to perform more actions</a>    
+                        {% endif %} 
+                    </div>     
+                </div>   
+                    
+            </div>     
+        </div>
+        
+        
+        <div class="comments-section">
+            <div class="comments-form">
+                    {% if user != listing.seller %}
+                        {% if comments_form is not None %}
+                            <form class="make-comment" action="" method="post">
+                                {% csrf_token %}
+                                <div class="comments-form-content">
+                                    {{comments_form}}
+                                    <button type="submit" class="btn-post-comment"> 
+                                        <img src="{% static "auctions/post-comment.svg" %}" alt="Post comment">
+                                    </button>
+                                </div>
+                                
+                            </form>
+                        {% endif %}
+                    {%endif%}
+            </div>
+            <div class="sort-and-count">
+                <form class="sorting-form" method="get">
+                    
+                    <label class="sort-label" for="sort">Sort by</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()">
+                        <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                        <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Newest</option>
+                    </select>
+                </form>
+                <p class="comments-right" id="comments-count">{{comments_count}} comment(s)</p>
+            </div>
+            <div class="comments">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p class="commenter"><img class="user-pic" src="{% static "auctions/user.svg" %}" alt="Profile picture">{{comment.commenter}}</p>
+                        <p class="comment-content">{{comment.content }}</p>
+                        <p class="comment-time">Created on: {{comment.timestamp}}</p>
+                    </div>
+                {%empty%}
+                    <div>No comments on this listing</div>
+                {% endfor %}     
+            </div>    
+        </div>
     </div>
+    
     
 
 {% endblock %}

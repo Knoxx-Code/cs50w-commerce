@@ -27,7 +27,7 @@ class MakeComment(forms.ModelForm):
         model = models.Comment
         fields = ['content']
         widgets = {
-            'content' : forms.Textarea(attrs={'placeholder': 'Leave a Comment'})
+            'content' : forms.Textarea(attrs={'placeholder': 'Leave a Comment','rows': 2, 'cols': 100,'class': 'comment-textarea'})
         }
         
         labels = {'content': ''}
