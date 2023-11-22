@@ -263,7 +263,7 @@ def remove_from_watchlist(request,listing_id):
     watchlist = get_object_or_404(WatchList,user=request.user)
 
     watchlist.listing.remove(listing)
-    messages.success(request,'Listing removed successfully from watchlist')
+    messages.success(request,'Successfully removed this listing from watchlist')
     
     return HttpResponseRedirect(reverse('auctions:listing_view',args=[listing_id]))
 

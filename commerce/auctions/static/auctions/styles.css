@@ -515,6 +515,16 @@ p {
     margin: 0 5px;
 }
 
+.losing-msg{
+    padding: 10px;
+    text-align: center;
+    background-color: #FF5F15;
+    border: 1px solid #FF5F15 ;
+    color: #fff;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
 
 /* Styling for comments section */
 .comments-section {
